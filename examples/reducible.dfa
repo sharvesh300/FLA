@@ -1,0 +1,19 @@
+# A and B are equivalent, C, D and E are equivalent, G is unreachable
+states:   A B C D E F G
+alphabet: 0 1
+start:    A
+accept:   C D E G
+A 0 -> B
+A 1 -> C
+B 0 -> A
+B 1 -> D
+C 0 -> E
+C 1 -> F
+D 0 -> E
+D 1 -> F
+E 0 -> E
+E 1 -> F
+F 0 -> F
+F 1 -> F
+G 0 -> A
+G 1 -> G

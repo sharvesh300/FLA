@@ -1,0 +1,13 @@
+# { wwᴿ | w ∈ {a, b}* }, accepted by empty stack; the PDA guesses the middle
+states:        push pop
+alphabet:      a b
+stack:         Z A B
+start:         push
+initial-stack: Z
+accept-by:     empty-stack
+push a ε -> push A
+push b ε -> push B
+push ε ε -> pop  ε
+pop  a A -> pop  ε
+pop  b B -> pop  ε
+pop  ε Z -> pop  ε

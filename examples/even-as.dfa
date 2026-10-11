@@ -1,0 +1,9 @@
+# Strings over {a, b} with an even number of a's
+states:   even odd
+alphabet: a b
+start:    even
+accept:   even
+even a -> odd
+even b -> even
+odd  a -> even
+odd  b -> odd

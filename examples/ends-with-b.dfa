@@ -1,0 +1,9 @@
+# Strings over {a, b} that end in b
+states:   p q
+alphabet: a b
+start:    p
+accept:   q
+p a -> p
+p b -> q
+q a -> p
+q b -> q

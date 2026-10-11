@@ -1,0 +1,8 @@
+# Strings over {a, b} that end in "ab"
+states:   q0 q1 q2
+alphabet: a b
+start:    q0
+accept:   q2
+q0 a -> q0 q1
+q0 b -> q0
+q1 b -> q2

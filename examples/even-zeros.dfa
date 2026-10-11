@@ -1,0 +1,9 @@
+# Binary strings containing an even number of 0s
+states:   even odd
+alphabet: 0 1
+start:    even
+accept:   even
+even 0 -> odd
+even 1 -> even
+odd  0 -> even
+odd  1 -> odd

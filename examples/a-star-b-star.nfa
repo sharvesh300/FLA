@@ -1,0 +1,8 @@
+# a*b* built with an ε-move between the two loops
+states:   q0 q1
+alphabet: a b
+start:    q0
+accept:   q1
+q0 a -> q0
+q0 ε -> q1
+q1 b -> q1
