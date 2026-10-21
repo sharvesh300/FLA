@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+// Pushdown automaton: a finite automaton plus a stack.
 public record Pda(
         Set<String> states,
         Set<Character> inputAlphabet,
@@ -19,6 +20,7 @@ public record Pda(
         EMPTY_STACK
     }
 
+    // Read 'input', pop 'pop', go to 'to', push 'push' (its first char ends up on top). ε skips the read/pop.
     public record Transition(String from, char input, char pop, String to, String push) {
         public Transition {
             Objects.requireNonNull(from, "from");

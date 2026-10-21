@@ -5,6 +5,7 @@ import org.example.automata.Pda;
 // The stack is written top-first: "AZ" means A is on top of Z.
 public record PdaConfiguration(String state, int position, String stack) {
 
+    // ε always matches; otherwise the next input char / stack top must match.
     public boolean canApply(Pda.Transition transition, String input) {
         boolean inputMatches = !transition.readsInput()
                 || (position < input.length() && input.charAt(position) == transition.input());
@@ -13,6 +14,7 @@ public record PdaConfiguration(String state, int position, String stack) {
         return transition.from().equals(state) && inputMatches && stackMatches;
     }
 
+    // Pop the top (if any), advance the input (if read), then push onto the top.
     public PdaConfiguration apply(Pda.Transition transition) {
         String remainingStack = transition.popsStack() ? stack.substring(1) : stack;
         int nextPosition = transition.readsInput() ? position + 1 : position;

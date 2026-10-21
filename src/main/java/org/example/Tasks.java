@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+// Each task loads automata, runs one algorithm and returns printable text.
 final class Tasks {
     private Tasks() {
     }
@@ -61,6 +62,7 @@ final class Tasks {
         return String.join("\n\n", sections);
     }
 
+    // Turn ε/eps tokens into the real empty string.
     private static List<String> normalized(List<String> inputs) {
         if (inputs.isEmpty()) {
             throw new IllegalArgumentException("provide at least one input string (use ε for the empty string)");

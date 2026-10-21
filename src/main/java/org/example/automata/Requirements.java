@@ -3,6 +3,7 @@ package org.example.automata;
 import java.util.Collection;
 import java.util.Set;
 
+// Validation helpers shared by the automaton constructors.
 final class Requirements {
     private Requirements() {
     }

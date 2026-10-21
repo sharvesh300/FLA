@@ -35,6 +35,7 @@ public final class Main {
         }
     }
 
+    // Dispatch a subcommand; its first argument is always the automaton file.
     static String execute(List<String> args) throws IOException {
         String command = args.get(0);
         List<String> rest = args.subList(1, args.size());
@@ -49,6 +50,7 @@ public final class Main {
         };
     }
 
+    // Check the argument count and return the first argument as a path.
     private static Path file(List<String> args, int min, int max) {
         if (args.size() < min || args.size() > max) {
             throw new IllegalArgumentException("wrong number of arguments\n" + USAGE);

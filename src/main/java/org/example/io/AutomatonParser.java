@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 
+// Text format: 'key: values' header lines and 'lhs -> rhs' transition lines; '#' starts a comment.
 public final class AutomatonParser {
     private static final String ARROW = "->";
     private static final Set<String> FINITE_AUTOMATON_KEYS = Set.of("states", "alphabet", "start", "accept");
@@ -48,6 +49,7 @@ public final class AutomatonParser {
             String from = line.left().get(0);
             char symbol = line.symbol(line.left().get(1), false);
             String to = line.right().get(0);
+            // put() returns the old target if this (state, symbol) was already defined.
             if (transitions.computeIfAbsent(from, key -> new LinkedHashMap<>()).put(symbol, to) != null) {
                 throw line.error("a DFA allows only one transition from " + from + " on '" + symbol + "'");
             }
@@ -83,6 +85,7 @@ public final class AutomatonParser {
         List<Pda.Transition> transitions = new ArrayList<>();
         for (TransitionLine line : definition.transitions()) {
             line.requireShape(3, 2, 2, "state input pop -> state push");
+            // Pushing ε means pushing nothing.
             String push = line.right().get(1);
             transitions.add(new Pda.Transition(
                     line.left().get(0),
@@ -102,6 +105,7 @@ public final class AutomatonParser {
                 definition.acceptanceMode()));
     }
 
+    // Report constructor validation errors as format errors.
     private static <T> T build(Supplier<T> constructor) {
         try {
             return constructor.get();
@@ -155,6 +159,7 @@ public final class AutomatonParser {
         }
     }
 
+    // The file split into headers and transition lines, before building an automaton.
     private static final class Definition {
         private final Map<String, Header> headers = new HashMap<>();
         private final List<TransitionLine> transitions = new ArrayList<>();

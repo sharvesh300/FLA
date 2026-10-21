@@ -45,6 +45,7 @@ final class InteractiveMenu {
                 }
             }
         } catch (NoSuchElementException endOfInput) {
+            // End of input (e.g. Ctrl-D): leave quietly.
             out.println();
         }
     }

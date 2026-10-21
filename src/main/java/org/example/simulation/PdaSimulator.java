@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// Breadth-first search over configurations, since a PDA can branch nondeterministically.
 public final class PdaSimulator {
     public static final int DEFAULT_MAX_CONFIGURATIONS = 100_000;
 
@@ -48,6 +49,7 @@ public final class PdaSimulator {
                 .collect(Collectors.groupingBy(Transition::from));
         PdaConfiguration initial = new PdaConfiguration(pda.start(), 0, String.valueOf(pda.initialStackSymbol()));
 
+        // Back-pointers used to rebuild the accepting path.
         Map<PdaConfiguration, Origin> origins = new HashMap<>();
         Set<PdaConfiguration> visited = new HashSet<>(Set.of(initial));
         Deque<PdaConfiguration> pending = new ArrayDeque<>(visited);
@@ -75,6 +77,7 @@ public final class PdaSimulator {
         return new Result(input, false, initial, List.of(), visited.size(), false);
     }
 
+    // All input must be consumed before either acceptance rule counts.
     private static boolean isAccepting(Pda pda, PdaConfiguration configuration, String input) {
         if (configuration.position() < input.length()) {
             return false;
@@ -85,6 +88,8 @@ public final class PdaSimulator {
         };
     }
 
+    
+    // Walk the back-pointers from the accepting configuration back to the start.
     private static List<Step> pathTo(PdaConfiguration last, Map<PdaConfiguration, Origin> origins) {
         List<Step> steps = new ArrayList<>();
         for (PdaConfiguration current = last; origins.containsKey(current); current = origins.get(current).previous()) {

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+// Deterministic finite automaton. Missing transitions act like an implicit dead state.
 public record Dfa(
         Set<String> states,
         Set<Character> alphabet,
@@ -43,10 +44,12 @@ public record Dfa(
         });
     }
 
+    // Empty when this partial DFA has no move here.
     public Optional<String> next(String state, char symbol) {
         return Optional.ofNullable(transitions.getOrDefault(state, Map.of()).get(symbol));
     }
 
+    // Follow one transition per symbol; falling off the graph means reject.
     public boolean accepts(String input) {
         String current = start;
         for (char symbol : input.toCharArray()) {
@@ -63,6 +66,7 @@ public record Dfa(
         return states.stream().allMatch(state -> alphabet.stream().allMatch(symbol -> next(state, symbol).isPresent()));
     }
 
+    // Route every missing transition to a fresh dead state so the DFA is total.
     public Dfa completed() {
         if (isComplete()) {
             return this;
@@ -82,6 +86,7 @@ public record Dfa(
         return new Dfa(allStates, alphabet, total, start, accepting);
     }
 
+    // Breadth-first search from the start state.
     public Set<String> reachableStates() {
         Set<String> reached = new LinkedHashSet<>(List.of(start));
         Deque<String> pending = new ArrayDeque<>(reached);

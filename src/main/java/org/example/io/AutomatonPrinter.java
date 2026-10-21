@@ -53,6 +53,7 @@ public final class AutomatonPrinter {
         return "%s: %s (%s)%n  %s".formatted(quoted(run.input()), verdict(run.accepted()), run.reason(), path);
     }
 
+    // For accepted input, prints each transition, its stack effect and the resulting configuration.
     public static String result(PdaSimulator.Result result) {
         String input = result.input();
         if (!result.accepted()) {
@@ -77,6 +78,7 @@ public final class AutomatonPrinter {
         return String.join("\n", lines);
     }
 
+    // Transition table with aligned columns; '->' marks the start state and '*' accepting states.
     private static String grid(Set<String> states, String start, Set<String> accepting, List<Character> columns,
                                BiFunction<String, Character, String> cell) {
         List<List<String>> rows = new ArrayList<>();
@@ -90,6 +92,7 @@ public final class AutomatonPrinter {
         columns.forEach(symbol -> header.add(String.valueOf(symbol)));
         rows.add(0, header);
 
+        // Each column is as wide as its widest cell.
         int[] widths = new int[header.size()];
         for (List<String> row : rows) {
             for (int column = 0; column < row.size(); column++) {

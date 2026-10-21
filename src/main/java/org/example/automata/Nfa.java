@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+// Nondeterministic finite automaton. ε-moves are stored under Symbols.EPSILON.
 public record Nfa(
         Set<String> states,
         Set<Character> alphabet,
@@ -47,6 +48,7 @@ public record Nfa(
         return transitions.getOrDefault(state, Map.of()).getOrDefault(symbol, Set.of());
     }
 
+    // Every state reachable from 'from' in exactly one 'symbol' step.
     public Set<String> move(Collection<String> from, char symbol) {
         Set<String> result = new LinkedHashSet<>();
         for (String state : from) {
@@ -55,6 +57,7 @@ public record Nfa(
         return Collections.unmodifiableSet(result);
     }
 
+    // Everything reachable using only ε-moves, including the starting states.
     public Set<String> epsilonClosure(Collection<String> from) {
         Set<String> closure = new LinkedHashSet<>(from);
         Deque<String> pending = new ArrayDeque<>(from);
@@ -68,6 +71,7 @@ public record Nfa(
         return Collections.unmodifiableSet(closure);
     }
 
+    // Track the whole set of states the NFA could be in at once.
     public boolean accepts(String input) {
         Set<String> current = epsilonClosure(Set.of(start));
         for (char symbol : input.toCharArray()) {

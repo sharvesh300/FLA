@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+// Runs two DFAs side by side: a state is a pair (state in first, state in second).
 public final class ProductConstruction {
     private ProductConstruction() {
     }
@@ -25,6 +26,7 @@ public final class ProductConstruction {
             throw new IllegalArgumentException(
                     "both DFAs must share an alphabet, got " + first.alphabet() + " and " + second.alphabet());
         }
+        // Complete both so every pair always has a successor.
         Dfa left = first.completed();
         Dfa right = second.completed();
 
@@ -33,6 +35,7 @@ public final class ProductConstruction {
         Deque<Pair> pending = new ArrayDeque<>(reached);
         Map<String, Map<Character, String>> transitions = new LinkedHashMap<>();
 
+        // Only explore pairs reachable from the start pair.
         while (!pending.isEmpty()) {
             Pair current = pending.poll();
             Map<Character, String> row = new LinkedHashMap<>();
@@ -52,6 +55,7 @@ public final class ProductConstruction {
         Set<String> accepting = new LinkedHashSet<>();
         for (Pair pair : reached) {
             states.add(pair.name());
+            // Intersection: accept only when both sides accept.
             if (left.accepting().contains(pair.left()) && right.accepting().contains(pair.right())) {
                 accepting.add(pair.name());
             }

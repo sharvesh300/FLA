@@ -10,6 +10,7 @@ public final class DfaSimulator {
     private DfaSimulator() {
     }
 
+    // Outcome of one input: states visited, the verdict, and why.
     public record Run(String input, List<String> path, boolean accepted, String reason) {
         public Run {
             path = List.copyOf(path);
@@ -21,6 +22,7 @@ public final class DfaSimulator {
         String current = dfa.start();
         for (int position = 0; position < input.length(); position++) {
             char symbol = input.charAt(position);
+            // Reject early with a clear message instead of just "no transition".
             if (!dfa.alphabet().contains(symbol)) {
                 return new Run(input, path, false,
                         "symbol '" + symbol + "' at position " + position + " is not in the alphabet");

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
+// Read-only copies that keep insertion order, so output is deterministic.
 final class Immutables {
     private Immutables() {
     }

@@ -11,15 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// Moore's algorithm: keep splitting groups of states until no group can be told apart.
 public final class DfaMinimizer {
     private DfaMinimizer() {
     }
 
     public static Dfa minimize(Dfa dfa) {
+        // Refinement needs every transition defined and no unreachable states.
         Dfa complete = withoutUnreachableStates(dfa).completed();
         List<Set<String>> partition = initialPartition(complete);
         while (true) {
             List<Set<String>> refined = refine(complete, partition);
+            // Nothing was split, so the partition is stable.
             if (refined.size() == partition.size()) {
                 return quotient(complete, refined);
             }
@@ -51,18 +54,21 @@ public final class DfaMinimizer {
         for (String state : dfa.states()) {
             (dfa.accepting().contains(state) ? accepting : rejecting).add(state);
         }
+        // Put the start state's block first so it is listed first in the result.
         List<Set<String>> blocks = dfa.accepting().contains(dfa.start())
                 ? List.of(accepting, rejecting)
                 : List.of(rejecting, accepting);
         return blocks.stream().filter(block -> !block.isEmpty()).toList();
     }
 
+    // States stay together only if every symbol sends them into the same block.
     private static List<Set<String>> refine(Dfa dfa, List<Set<String>> partition) {
         Map<String, Integer> blockOf = blockIndex(partition);
         List<Set<String>> refined = new ArrayList<>();
         for (Set<String> block : partition) {
             Map<List<Integer>, Set<String>> bySignature = new LinkedHashMap<>();
             for (String state : block) {
+                // Signature: which block each symbol leads to.
                 List<Integer> signature = dfa.alphabet().stream()
                         .map(symbol -> blockOf.get(dfa.next(state, symbol).orElseThrow()))
                         .toList();
@@ -73,6 +79,7 @@ public final class DfaMinimizer {
         return refined;
     }
 
+    // Merge each block into one state; any member can represent it since they all behave alike.
     private static Dfa quotient(Dfa dfa, List<Set<String>> partition) {
         Map<String, Integer> blockOf = blockIndex(partition);
         List<String> names = partition.stream()
